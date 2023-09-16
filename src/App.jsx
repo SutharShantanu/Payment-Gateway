@@ -1,10 +1,10 @@
-import PaymentCard from "./Components/PaymentCard";
+import Payment from "./Pages/Payment";
 import "./styles.css";
 
 export default function App() {
-  return (
-    <div className="App">
-      <PaymentCard />
-    </div>
-  );
+    return (
+        <div className="App">
+            <Payment />
+        </div>
+    );
 }
