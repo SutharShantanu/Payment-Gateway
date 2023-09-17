@@ -35,7 +35,7 @@ const PayCard = ({ amount, img, handlePayment }) => {
                 <Button
                     variant="solid"
                     colorScheme="blue"
-                    onClick={handlePayment}>
+                    onClick={() => handlePayment(amount)}>
                     Buy now
                 </Button>
             </CardFooter>

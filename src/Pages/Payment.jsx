@@ -4,57 +4,52 @@ import axios from "axios";
 
 const Payment = () => {
     const handlePayment = async (amount) => {
+        console.log(amount);
         try {
-            const KeyData = await axios.get(`http://localhost:4500/pay/getkey`);
-            console.log(KeyData.data.key);
-            // const key = KeyData.data.key;
-            // key = JSON.stringify(key);
+            const data = await axios.get("http://localhost:4500/pay/getkey");
+            console.log(data.data.key);
 
-            const OrderData = await axios.post(
-                `http://localhost:4500/pay/checkout`,
-                { amount }
-            );
+            const orderResponse = await axios
+                .post("http://localhost:4500/pay/checkout", { amount })
+                .then((res) => {
+                    return res.data.order;
+                    // console.log(res.data.order);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
-            console.log(OrderData);
+            console.log(orderResponse);
 
-            // const order = OrderData.data;
-            // console.log(order);
-            // order = JSON.stringify(order);
+            const options = {
+                key: data.data.key,
+                amount: orderResponse.amount,
+                currency: "INR",
+                name: "RazorPay Payment Gateway",
+                description: "Tutorial of RazorPay",
+                image: "https://avatars.githubusercontent.com/u/110021464?v=4",
+                order_id: orderResponse.id,
+                callback_url: "http://localhost:4500/pay/paymentverification",
+                prefill: {
+                    name: "Gaurav Kumar",
+                    email: "gaurav.kumar@example.com",
+                    contact: "9999999999",
+                },
+                notes: {
+                    address: "Razorpay Corporate Office",
+                },
+                theme: {
+                    color: "#121212",
+                },
+            };
 
-            // const {
-            //     data: { order },
-            // } = await axios.post("http://localhost:4500/pay/checkout", {
-            //     amount,
-            // });
-            // console.log(order, key);
-
-            // const options = {
-            //     key,
-            //     amount: order.amount,
-            //     currency: "INR",
-            //     name: "6 Pack Programmer",
-            //     description: "Tutorial of RazorPay",
-            //     image: "https://avatars.githubusercontent.com/u/25058652?v=4",
-            //     order_id: order.id,
-            //     callback_url: "http://localhost:4500/pay/paymentverification",
-            //     prefill: {
-            //         name: "Gaurav Kumar",
-            //         email: "gaurav.kumar@example.com",
-            //         contact: "9999999999",
-            //     },
-            //     notes: {
-            //         address: "Razorpay Corporate Office",
-            //     },
-            //     theme: {
-            //         color: "#121212",
-            //     },
-            // };
-            // const razor = new window.Razorpay(options);
-            // razor.open();
+            const razor = new window.Razorpay(options);
+            razor.open();
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     };
+
     return (
         <div>
             <PayCard
